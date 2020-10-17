@@ -11,7 +11,7 @@ GOPATH=$(GOBASE)/.gocache:$(GOBASE)
 GOBIN=$(GOBASE)/.build
 GOFILES=$(wildcard *.go)
 # Use linker flags to provide version/build settings
-LDFLAGS=-ldflags "-X=$(PROJECTFULLNAME)/main.version=$(VERSION) -X=$(PROJECTFULLNAME)/main.commit=$(BUILD)"
+LDFLAGS=-ldflags "-X=main.version=$(VERSION) -X=main.commit=$(BUILD)"
 
 # Redirect error output to a file, so we can show it in development mode.
 STDERR := /tmp/.$(PROJECTNAME)-stderr.txt
