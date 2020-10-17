@@ -1,7 +1,7 @@
 # Flussonic exporter
 Prometheus exporter for Flussonic media server
 
-##Config
+## Config
 Specify config file by `-config` flag.
 ```shell script
 ./flussonic_exporter -config /etc/flussonic_exporter/settings.yaml
@@ -22,7 +22,7 @@ flussonics:
     instance-name: "my-flussonic"
 ```
 
-##Prometheus
+## Prometheus
 ```
   - job_name: 'flussonic'
     metrics_path: /metrics
