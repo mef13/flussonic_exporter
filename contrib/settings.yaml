@@ -1,0 +1,11 @@
+log-path: "/var/log/flussonic_exporter"
+log-level: info
+listen-address: ":9113"
+metrics-path: "/metrics"
+exporter-metrics: false
+flussonics:
+  - user: ""
+    password: ""
+    url: ""
+    scrape-interval: ""
+    instance-name: ""
