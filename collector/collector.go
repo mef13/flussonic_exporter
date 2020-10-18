@@ -89,7 +89,7 @@ func (c *FlussonicCollector) failScrape(flussConf flussonic.Flussonic, startTime
 	cache.addMetric(prometheus.MustNewConstMetric(scrapeSuccessDesc, prometheus.GaugeValue, float64(0),
 		flussConf.InstanceName))
 	duration := time.Since(startTime)
-	cache.addMetric(prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, float64(duration),
+	cache.addMetric(prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, duration.Seconds(),
 		flussConf.InstanceName))
 	c.save(flussConf.Url.String(), cache)
 }
@@ -120,7 +120,7 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 	cache.addMetric(prometheus.MustNewConstMetric(scrapeSuccessDesc, prometheus.GaugeValue, float64(1),
 		flussConf.InstanceName))
 	duration := time.Since(startTime)
-	cache.addMetric(prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, float64(duration),
+	cache.addMetric(prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, duration.Seconds(),
 		flussConf.InstanceName))
 	c.save(flussConf.Url.String(), cache)
 }
