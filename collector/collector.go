@@ -13,13 +13,13 @@ import (
 const namespace = "flussonic"
 
 var (
-	scrapeDurationDesc     = prometheus.NewDesc(
+	scrapeDurationDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, `scrape`, `collector_duration_seconds`),
 		`flussonic_exporter: Duration of a collector scrape.`,
 		[]string{`server`},
 		nil,
 	)
-	scrapeSuccessDesc     = prometheus.NewDesc(
+	scrapeSuccessDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, `scrape`, `collector_success`),
 		`flussonic_exporter: Whether a collector succeeded.`,
 		[]string{`server`},
@@ -31,6 +31,12 @@ var (
 		`flussonic_exporter: Total clients count.`,
 		[]string{`server`},
 		prometheus.Labels{"type": "total"},
+	)
+	requestDurationDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `scrape`, `api_request_duration_sec`),
+		`flussonic_exporter: API request duration.`,
+		[]string{`server`, `url`},
+		nil,
 	)
 )
 
@@ -111,6 +117,13 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		prometheus.GaugeValue,
 		serv.TotalClients,
 		flussConf.InstanceName,
+	))
+	cache.addMetric(prometheus.MustNewConstMetric(
+		requestDurationDesc,
+		prometheus.GaugeValue,
+		serv.RequestDuration,
+		flussConf.InstanceName,
+		serv.Url,
 	))
 
 	//end scrape & save cache
