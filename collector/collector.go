@@ -55,6 +55,14 @@ var (
 		[]string{`server`, `url`},
 		nil,
 	)
+
+	streamLabels      = []string{`server`, `name`, `title`, `comment`}
+	streamBitrateDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `bitrate`),
+		`flussonic_exporter: Stream bitrate.`,
+		streamLabels,
+		nil,
+	)
 )
 
 type FlussonicCollector struct {
@@ -127,14 +135,15 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		c.failScrape(flussConf, startTime)
 		return
 	}
+	media, err := flussConf.GetMedia()
+	if err != nil {
+		logger.Error("error scrape from flussonic api",
+			zap.String("server", flussConf.Url.String()), zap.String("method", "GetMedia"), zap.Error(err))
+		c.failScrape(flussConf, startTime)
+		return
+	}
 
 	//add metrics to cache
-	cache.addMetric(prometheus.MustNewConstMetric(
-		totalClientsDesc,
-		prometheus.GaugeValue,
-		serv.TotalClients,
-		flussConf.InstanceName,
-	))
 	cache.addMetric(prometheus.MustNewConstMetric(
 		requestDurationDesc,
 		prometheus.GaugeValue,
@@ -142,6 +151,27 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		flussConf.InstanceName,
 		serv.Url,
 	))
+	cache.addMetric(prometheus.MustNewConstMetric(
+		requestDurationDesc,
+		prometheus.GaugeValue,
+		media.RequestDuration,
+		flussConf.InstanceName,
+		media.Url,
+	))
+	cache.addMetric(prometheus.MustNewConstMetric(
+		totalClientsDesc,
+		prometheus.GaugeValue,
+		serv.TotalClients,
+		flussConf.InstanceName,
+	))
+	for _, stream := range media.Streams {
+		cache.addMetric(newStreamGaugeMetric(
+			streamBitrateDesc,
+			stream.Stats.Bitrate,
+			flussConf.InstanceName,
+			stream,
+		))
+	}
 
 	//end scrape & save cache
 	cache.addMetric(prometheus.MustNewConstMetric(scrapeSuccessDesc, prometheus.GaugeValue, float64(1),
@@ -150,6 +180,22 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 	cache.addMetric(prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, duration.Seconds(),
 		flussConf.InstanceName))
 	c.save(flussConf.Url.String(), cache)
+}
+
+func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+	return prometheus.MustNewConstMetric(
+		desc,
+		valueType,
+		value,
+		instanceName,
+		stream.Name,
+		stream.Options.Title,
+		stream.Options.Comment,
+	)
+}
+
+func newStreamGaugeMetric(desc *prometheus.Desc, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+	return newStreamMetric(desc, prometheus.GaugeValue, value, instanceName, stream)
 }
 
 // FuncJob is a wrapper that turns a func() into a cron.Job

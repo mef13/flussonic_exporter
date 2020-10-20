@@ -1,6 +1,10 @@
 # Flussonic exporter
 Prometheus exporter for Flussonic media server
 
+## Collected metrics
+- Total clients count
+- Streams bitrate
+
 ## Config
 Specify config file by `-config` flag.
 ```shell script
