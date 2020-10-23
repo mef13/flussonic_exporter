@@ -23,7 +23,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -57,7 +56,7 @@ var (
 		nil,
 	)
 
-	streamLabels      = []string{`server`, `name`, `title`, `comment`, `dvr_enabled`}
+	streamLabels      = []string{`server`, `name`, `title`, `comment`, `dvr_enabled`, `transcoder_enabled`}
 	streamBitrateDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, `stream`, `bitrate`),
 		`flussonic_exporter: Stream bitrate.`,
@@ -184,9 +183,13 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 }
 
 func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
-	dvrEnabled := 0
+	dvrEnabled := "0"
 	if stream.Stats.DvrEnabled {
-		dvrEnabled = 1
+		dvrEnabled = "1"
+	}
+	transcoderEnabled := "0"
+	if stream.Stats.RunningTranscoder {
+		transcoderEnabled = "1"
 	}
 	return prometheus.MustNewConstMetric(
 		desc,
@@ -196,7 +199,8 @@ func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, valu
 		stream.Name,
 		stream.Options.Title,
 		stream.Options.Comment,
-		strconv.Itoa(dvrEnabled),
+		dvrEnabled,
+		transcoderEnabled,
 	)
 }
 
