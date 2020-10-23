@@ -160,6 +160,13 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		c.failScrape(flussConf, startTime)
 		return
 	}
+	sessions, err := flussConf.GetSessions()
+	if err != nil {
+		logger.Error("error scrape from flussonic api",
+			zap.String("server", flussConf.Url.String()), zap.String("method", "GetSessions"), zap.Error(err))
+		c.failScrape(flussConf, startTime)
+		return
+	}
 
 	//add metrics to cache
 	cache.addMetric(prometheus.MustNewConstMetric(
@@ -177,11 +184,20 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		media.Url,
 	))
 	cache.addMetric(prometheus.MustNewConstMetric(
+		requestDurationDesc,
+		prometheus.GaugeValue,
+		sessions.RequestDuration,
+		flussConf.InstanceName,
+		sessions.Url,
+	))
+	cache.addMetric(prometheus.MustNewConstMetric(
 		totalClientsDesc,
 		prometheus.GaugeValue,
 		serv.TotalClients,
 		flussConf.InstanceName,
 	))
+
+	//add streams
 	for _, stream := range media.Streams {
 		cache.addMetric(newStreamGaugeMetric(
 			streamBitrateDesc,
