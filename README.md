@@ -2,8 +2,8 @@
 Prometheus exporter for Flussonic media server
 
 ## Collected metrics
-- Total clients count
-- Streams bitrate
+* Total clients count
+* Streams bitrate
 
 ## Config
 Specify config file by `-config` flag.
@@ -35,3 +35,6 @@ flussonics:
             - targets: [ 'localhost:9113']
 
 ```
+
+## Community
+* [gitter](https://gitter.im/flussonic_exporter/community)
