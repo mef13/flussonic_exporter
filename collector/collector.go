@@ -63,6 +63,24 @@ var (
 		streamLabels,
 		nil,
 	)
+	streamRetryCountDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `retry_count`),
+		`flussonic_exporter: Stream retry count.`,
+		streamLabels,
+		nil,
+	)
+	streamAliveDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `is_alive`),
+		`flussonic_exporter: Is stream alive.`,
+		streamLabels,
+		nil,
+	)
+	streamInputErrorRateDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `input_error_rate`),
+		`flussonic_exporter: Stream input error rate.`,
+		streamLabels,
+		nil,
+	)
 )
 
 type FlussonicCollector struct {
@@ -171,6 +189,28 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 			flussConf.InstanceName,
 			stream,
 		))
+		cache.addMetric(newStreamCounterMetric(
+			streamRetryCountDesc,
+			stream.Stats.RetryCount,
+			flussConf.InstanceName,
+			stream,
+		))
+		isAlive := float64(0)
+		if stream.Stats.Alive {
+			isAlive = 1
+		}
+		cache.addMetric(newStreamGaugeMetric(
+			streamAliveDesc,
+			isAlive,
+			flussConf.InstanceName,
+			stream,
+		))
+		cache.addMetric(newStreamGaugeMetric(
+			streamInputErrorRateDesc,
+			stream.Stats.InputErrorRate,
+			flussConf.InstanceName,
+			stream,
+		))
 	}
 
 	//end scrape & save cache
@@ -206,6 +246,10 @@ func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, valu
 
 func newStreamGaugeMetric(desc *prometheus.Desc, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
 	return newStreamMetric(desc, prometheus.GaugeValue, value, instanceName, stream)
+}
+
+func newStreamCounterMetric(desc *prometheus.Desc, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+	return newStreamMetric(desc, prometheus.CounterValue, value, instanceName, stream)
 }
 
 // FuncJob is a wrapper that turns a func() into a cron.Job
