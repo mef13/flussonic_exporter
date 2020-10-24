@@ -87,6 +87,18 @@ var (
 		streamLabels,
 		nil,
 	)
+	streamClientsTotalDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `clients_count`),
+		`flussonic_exporter: Stream clients count.`,
+		streamLabels,
+		prometheus.Labels{"type": "total"},
+	)
+	streamClientsDvrDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `clients_count`),
+		`flussonic_exporter: Stream clients count.`,
+		streamLabels,
+		prometheus.Labels{"type": "dvr"},
+	)
 )
 
 type FlussonicCollector struct {
@@ -236,6 +248,32 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		cache.addMetric(newStreamGaugeMetric(
 			streamInputErrorRateDesc,
 			stream.Stats.InputErrorRate,
+			flussConf.InstanceName,
+			stream,
+		))
+	}
+
+	for _, session := range sessions.Sessions {
+		stream, ok := media.Streams[session.Name]
+		if !ok {
+			stream = &flussonic.Stream{
+				Name:  session.Name,
+				Stats: flussonic.Stats{},
+				Options: flussonic.Options{
+					Title:   "NOT FOUND",
+					Comment: "NOT FOUND",
+				},
+			}
+		}
+		cache.addMetric(newStreamGaugeMetric(
+			streamClientsTotalDesc,
+			session.TotalClients,
+			flussConf.InstanceName,
+			stream,
+		))
+		cache.addMetric(newStreamGaugeMetric(
+			streamClientsDvrDesc,
+			session.DvrClients,
 			flussConf.InstanceName,
 			stream,
 		))
