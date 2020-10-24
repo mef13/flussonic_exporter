@@ -238,7 +238,7 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 	c.save(flussConf.Url.String(), cache)
 }
 
-func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, value float64, instanceName string, stream *flussonic.Stream) prometheus.Metric {
 	dvrEnabled := "0"
 	if stream.Stats.DvrEnabled {
 		dvrEnabled = "1"
@@ -260,11 +260,11 @@ func newStreamMetric(desc *prometheus.Desc, valueType prometheus.ValueType, valu
 	)
 }
 
-func newStreamGaugeMetric(desc *prometheus.Desc, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+func newStreamGaugeMetric(desc *prometheus.Desc, value float64, instanceName string, stream *flussonic.Stream) prometheus.Metric {
 	return newStreamMetric(desc, prometheus.GaugeValue, value, instanceName, stream)
 }
 
-func newStreamCounterMetric(desc *prometheus.Desc, value float64, instanceName string, stream flussonic.Stream) prometheus.Metric {
+func newStreamCounterMetric(desc *prometheus.Desc, value float64, instanceName string, stream *flussonic.Stream) prometheus.Metric {
 	return newStreamMetric(desc, prometheus.CounterValue, value, instanceName, stream)
 }
 
