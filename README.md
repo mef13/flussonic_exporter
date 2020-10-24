@@ -1,4 +1,6 @@
 # Flussonic exporter
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter?ref=badge_shield)
+
 Prometheus exporter for Flussonic media server
 
 ## Collected metrics
@@ -38,3 +40,7 @@ flussonics:
 
 ## Community
 * [gitter](https://gitter.im/flussonic_exporter/community)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter?ref=badge_large)
