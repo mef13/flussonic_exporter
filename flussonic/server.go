@@ -25,8 +25,8 @@ import (
 
 type Server struct {
 	RequestDuration float64 `json:"-"`
-	Url string `json:"-"`
-	TotalClients float64 `json:"total_clients"`
+	Url             string  `json:"-"`
+	TotalClients    float64 `json:"total_clients"`
 }
 
 func (f *Flussonic) GetServer() (*Server, error) {

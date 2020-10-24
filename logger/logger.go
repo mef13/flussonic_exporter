@@ -30,8 +30,8 @@ import (
 )
 
 var (
-	once      sync.Once
-	logger    *zap.Logger
+	once   sync.Once
+	logger *zap.Logger
 )
 
 func InitLogger(logPath string, logLevel string, sentryDSN string, version string) {
