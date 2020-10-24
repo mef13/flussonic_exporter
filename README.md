@@ -2,7 +2,6 @@
 [![Latest Version](https://img.shields.io/github/release/mef13/flussonic_exporter.svg?maxAge=8600)]()
 [![License](https://img.shields.io/github/license/janeczku/rancher-letsencrypt.svg?maxAge=8600)]()
 [![Go Report Card](https://goreportcard.com/badge/github.com/mef13/flussonic_exporter)]()
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter?ref=badge_shield)
 
 Prometheus exporter for Flussonic media server
 
@@ -43,7 +42,3 @@ flussonics:
 
 ## Community
 * [gitter](https://gitter.im/flussonic_exporter/community)
-
-
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmef13%2Fflussonic_exporter?ref=badge_large)
