@@ -49,6 +49,12 @@ var (
 		[]string{`server`},
 		prometheus.Labels{"type": "total"},
 	)
+	totalDvrClientsDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `clients`, `total`),
+		`flussonic_exporter: Total clients count.`,
+		[]string{`server`},
+		prometheus.Labels{"type": "dvr"},
+	)
 	requestDurationDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, `scrape`, `api_request_duration_sec`),
 		`flussonic_exporter: API request duration.`,
@@ -194,6 +200,12 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		totalClientsDesc,
 		prometheus.GaugeValue,
 		serv.TotalClients,
+		flussConf.InstanceName,
+	))
+	cache.addMetric(prometheus.MustNewConstMetric(
+		totalDvrClientsDesc,
+		prometheus.GaugeValue,
+		sessions.TotalDvrClients,
 		flussConf.InstanceName,
 	))
 

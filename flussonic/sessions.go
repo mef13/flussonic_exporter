@@ -27,6 +27,7 @@ import (
 type Sessions struct {
 	RequestDuration float64
 	Url             string
+	TotalDvrClients float64
 	Sessions        map[string]*MediaSessions
 }
 
@@ -39,7 +40,7 @@ type MediaSessions struct {
 
 func (f *Flussonic) GetSessions() (*Sessions, error) {
 	client := &http.Client{}
-	sessions := Sessions{Sessions: make(map[string]*MediaSessions)}
+	sessions := Sessions{Sessions: make(map[string]*MediaSessions), TotalDvrClients: 0}
 	sessions.Url = "/flussonic/api/sessions"
 	req, err := http.NewRequest("GET", f.Url.String()+sessions.Url, nil)
 	if err != nil {
@@ -83,6 +84,7 @@ func (f *Flussonic) GetSessions() (*Sessions, error) {
 		sessions.Sessions[e.Name].TotalClients++
 		if strings.Contains(e.Type, "dvr") {
 			sessions.Sessions[e.Name].DvrClients++
+			sessions.TotalDvrClients++
 		}
 		sessions.Sessions[e.Name].Types[e.Type]++
 	}
