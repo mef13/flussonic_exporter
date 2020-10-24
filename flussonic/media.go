@@ -27,7 +27,7 @@ import (
 type Media struct {
 	RequestDuration float64
 	Url             string
-	Streams         map[string]Stream
+	Streams         map[string]*Stream
 }
 
 type Stream struct {
@@ -55,7 +55,7 @@ type Options struct {
 
 func (f *Flussonic) GetMedia() (*Media, error) {
 	client := &http.Client{}
-	media := Media{Streams: make(map[string]Stream)}
+	media := Media{Streams: make(map[string]*Stream)}
 	media.Url = "/flussonic/api/media"
 	req, err := http.NewRequest("GET", f.Url.String()+media.Url, nil)
 	if err != nil {
@@ -86,7 +86,7 @@ func (f *Flussonic) GetMedia() (*Media, error) {
 			if err != nil {
 				return nil, err
 			}
-			media.Streams[stream.Name] = stream
+			media.Streams[stream.Name] = &stream
 		}
 	}
 
