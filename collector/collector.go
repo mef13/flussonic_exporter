@@ -251,18 +251,13 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 			flussConf.InstanceName,
 			stream,
 		))
-	}
-
-	for _, session := range sessions.Sessions {
-		stream, ok := media.Streams[session.Name]
+		session, ok := sessions.Sessions[stream.Name]
 		if !ok {
-			stream = &flussonic.Stream{
-				Name:  session.Name,
-				Stats: flussonic.Stats{},
-				Options: flussonic.Options{
-					Title:   "NOT FOUND",
-					Comment: "NOT FOUND",
-				},
+			session = &flussonic.MediaSessions{
+				Name:         stream.Name,
+				DvrClients:   0,
+				TotalClients: 0,
+				Types:        nil,
 			}
 		}
 		cache.addMetric(newStreamGaugeMetric(
