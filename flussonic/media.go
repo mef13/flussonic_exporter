@@ -37,14 +37,26 @@ type Stream struct {
 }
 
 type Stats struct {
-	Bitrate           float64 `mapstructure:"bitrate"`
-	Alive             bool    `mapstructure:"alive"`
-	ClientCount       float64 `mapstructure:"client_count"`
-	DvrEnabled        bool    `mapstructure:"dvr_enabled"`
-	InputErrorRate    float64 `mapstructure:"input_error_rate"`
-	Lifetime          float64 `mapstructure:"lifetime"`
-	RetryCount        float64 `mapstructure:"retry_count"`
-	RunningTranscoder bool    `mapstructure:"running_transcoder"`
+	Bitrate           float64   `mapstructure:"bitrate"`
+	Alive             bool      `mapstructure:"alive"`
+	ClientCount       float64   `mapstructure:"client_count"`
+	DvrEnabled        bool      `mapstructure:"dvr_enabled"`
+	InputErrorRate    float64   `mapstructure:"input_error_rate"`
+	Lifetime          float64   `mapstructure:"lifetime"`
+	RetryCount        float64   `mapstructure:"retry_count"`
+	RunningTranscoder bool      `mapstructure:"running_transcoder"`
+	MediaInfo         MediaInfo `mapstructure:"media_info"`
+}
+
+type MediaInfo struct {
+	Provider string   `mapstructure:"provider"`
+	Title    string   `mapstructure:"title"`
+	Tracks   []Tracks `mapstructure:"tracks"`
+}
+
+type Tracks struct {
+	TrackId string `mapstructure:"track_id"`
+	Content string `mapstructure:"content"`
 }
 
 type Options struct {
@@ -89,6 +101,5 @@ func (f *Flussonic) GetMedia() (*Media, error) {
 			media.Streams[stream.Name] = &stream
 		}
 	}
-
 	return &media, nil
 }

@@ -87,6 +87,12 @@ var (
 		streamLabels,
 		nil,
 	)
+	streamTracksCountDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, `stream`, `tracks_count`),
+		`flussonic_exporter: Stream tracks count.`,
+		streamLabels,
+		nil,
+	)
 	streamClientsTotalDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, `stream`, `clients_count`),
 		`flussonic_exporter: Stream clients count.`,
@@ -248,6 +254,12 @@ func (c *FlussonicCollector) Scrape(flussConf flussonic.Flussonic) {
 		cache.addMetric(newStreamGaugeMetric(
 			streamInputErrorRateDesc,
 			stream.Stats.InputErrorRate,
+			flussConf.InstanceName,
+			stream,
+		))
+		cache.addMetric(newStreamGaugeMetric(
+			streamTracksCountDesc,
+			float64(len(stream.Stats.MediaInfo.Tracks)),
 			flussConf.InstanceName,
 			stream,
 		))
