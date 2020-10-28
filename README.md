@@ -6,9 +6,18 @@
 
 Prometheus exporter for Flussonic media server
 
-## Collected metrics
-* Total and dvr clients count(together and on each stream)
-* Streams bitrate, alive, retry count, input error rate
+## What is collecting
+* Server
+    * Total clients count
+    * Dvr clients count
+* Streams 
+    * Bitrate
+    * Alive
+    * Retry count
+    * Input error rate
+    * Total clients count
+    * Dvr clients count
+    * Tracks count
 
 ## Config
 Specify config file by `-config` flag.
