@@ -50,5 +50,30 @@ flussonics:
 
 ```
 
+## Useful alerts
+Stream down more than 5 minutes:
+```
+  - alert: FlussonicStreamDown
+    expr: flussonic_stream_retry_count > 20
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Flussonic stream down (server {{ $labels.server }})"
+      description: "Flussonic stream '{{ $labels.name }}' down. Server {{ $labels.server }}"
+```
+
+The number of tracks on a stream is more than 2:
+```
+  - alert: FlussonicStreamTracksCount
+    expr: flussonic_stream_tracks_count > 2
+    labels:
+      severity: warning
+    annotations:
+      summary: "Flussonic stream tracks count mismatch (server {{ $labels.server }})"
+      description: "Flussonic stream '{{ $labels.name }}' tracks count mismatch(tracks count = {{ $value }}). Server {{ $labels.server }}"
+
+``` 
+
 ## Community
 * [gitter](https://gitter.im/flussonic_exporter/community)
