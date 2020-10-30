@@ -62,6 +62,7 @@ copy-contrib:
 	@contrib/macros.sh prepare_folder /etc/$(PROJECTNAME) $(PROJECTNAME)
 	@contrib/macros.sh cp_mod $(GOBASE)/contrib/settings.yaml /etc/$(PROJECTNAME)/settings.yaml $(PROJECTNAME)
 	@contrib/macros.sh prepare_folder /var/log/$(PROJECTNAME) $(PROJECTNAME)
+	@cp -n $(GOBASE)/contrib/flussonic_exporter.service /lib/systemd/system/flussonic_exporter.service
 
 .PHONY: add-user
 add-user:
