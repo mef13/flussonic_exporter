@@ -51,6 +51,17 @@ flussonics:
 ```
 
 ## Useful alerts
+Server api not response(Flussonic down):
+```
+  - alert: FlussonicServerNotResponse
+    expr: avg_over_time(flussonic_scrape_collector_success[5m]) * 100 < 50
+    labels:
+      severity: critical
+    annotations:
+      summary: "Flussonic api not response (server {{ $labels.server }})"
+      description: "Flussonic server '{{ $labels.server }}' not response."
+```
+
 Stream down more than 5 minutes:
 ```
   - alert: FlussonicStreamDown
